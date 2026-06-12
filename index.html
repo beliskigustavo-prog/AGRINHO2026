@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agrofloresta & Sustentabilidade</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #f5f2ec; --surface: #fff; --border: #d6cfc3;
+      --text: #1c1c1a; --muted: #6b6659;
+      --green: #2e5339; --green2: #4a7c5f;
+      --ok: #e8f0e9; --err: #f5eaea;
+    }
+
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.7; }
+
+    nav {
+      background: var(--green);
+      padding: .9rem 2.5rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    nav .marca { font-family: 'Playfair Display', serif; color: #d4e8da; letter-spacing: .5px; }
+    nav .tag   { font-size: .72rem; color: #8fb89a; letter-spacing: 2px; text-transform: uppercase; }
+
+    header {
+      background: var(--green);
+      padding: 5rem 2.5rem 4rem;
+      border-bottom: 1px solid #1e3a28;
+    }
+    header .inner { max-width: 760px; margin: 0 auto; }
+    header .eyebrow { font-size: .7rem; letter-spacing: 3px; text-transform: uppercase; color: #7aab8a; margin-bottom: 1.2rem; }
+    header h1 { font-family: 'Playfair Display', serif; font-size: 3rem; color: #e8f0e9; line-height: 1.2; margin-bottom: 1.2rem; }
+    header p  { font-size: 1rem; color: #a3bfaa; max-width: 560px; font-weight: 300; line-height: 1.8; }
+
+    main { max-width: 1060px; margin: 0 auto; padding: 3.5rem 2rem; }
+
+    .label {
+      font-size: .68rem; letter-spacing: 3px; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 1.8rem; padding-bottom: .6rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1.5rem; margin-bottom: 4rem;
+    }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 1.6rem 1.4rem; }
+    .card .num { font-size: .72rem; color: var(--green2); letter-spacing: 2px; margin-bottom: .8rem; font-weight: 500; }
+    .card h2   { font-family: 'Playfair Display', serif; font-size: 1.05rem; margin-bottom: .7rem; font-weight: 500; }
+    .card p    { font-size: .86rem; color: var(--muted); line-height: 1.75; }
+
+    .stats {
+      background: var(--green); border-radius: 4px; padding: 2.2rem 2.5rem;
+      margin-bottom: 4rem; display: flex; gap: 3rem; align-items: center; flex-wrap: wrap;
+    }
+    .stat { text-align: center; }
+    .stat b    { font-family: 'Playfair Display', serif; font-size: 2.6rem; color: #a8d5b5; display: block; line-height: 1; }
+    .stat span { font-size: .75rem; color: #7aab8a; letter-spacing: 1px; text-transform: uppercase; margin-top: .3rem; display: block; }
+    .sep { width: 1px; height: 60px; background: #3d6e4e; flex-shrink: 0; }
+
+    .quiz-box { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 2rem 2.2rem; margin-bottom: 2rem; }
+    .quiz-top  { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.6rem; flex-wrap: wrap; gap: .8rem; }
+    .quiz-top h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 500; }
+    .meta { display: flex; gap: 1.2rem; font-size: .78rem; color: var(--muted); }
+    .meta b { color: var(--text); }
+
+    .prog { height: 3px; background: var(--border); border-radius: 2px; margin-bottom: 1.8rem; }
+    .prog-bar { height: 100%; background: var(--green2); border-radius: 2px; transition: width .4s; }
+
+    .q-text { font-size: 1rem; font-weight: 500; margin-bottom: 1.2rem; line-height: 1.6; }
+    .options { display: flex; flex-direction: column; gap: .6rem; }
+
+    .opt {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 3px;
+      padding: .75rem 1rem; cursor: pointer; font-size: .9rem; color: var(--text);
+      text-align: left; font-family: 'Inter', sans-serif;
+      transition: border-color .15s, background .15s;
+    }
+    .opt:hover:not(:disabled) { border-color: var(--green2); background: var(--ok); }
+    .opt.ok  { border-color: var(--green);  background: var(--ok);  color: var(--green);  font-weight: 500; }
+    .opt.err { border-color: #7a2e2e; background: var(--err); color: #7a2e2e; }
+    .opt:disabled { cursor: default; }
+
+    #fb { min-height: 1.4rem; margin-top: 1rem; font-size: .88rem; color: var(--muted); font-style: italic; }
+    #fb.ok  { color: var(--green);  font-style: normal; font-weight: 500; }
+    #fb.err { color: #7a2e2e; font-style: normal; }
+
+    .quiz-foot {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 1.6rem; padding-top: 1.2rem; border-top: 1px solid var(--border); flex-wrap: wrap; gap: .8rem;
+    }
+
+    button {
+      border-radius: 3px; padding: .6rem 1.5rem; font-size: .85rem; cursor: pointer;
+      font-family: 'Inter', sans-serif; letter-spacing: .3px; transition: background .15s;
+      background: var(--green); color: #d4e8da; border: none;
+    }
+    button:hover { background: var(--green2); }
+    button:disabled { opacity: .4; cursor: default; }
+    button.ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+    button.ghost:hover { background: var(--bg); color: var(--text); }
+
+    #resultado { display: none; text-align: center; padding: 2rem 0 1rem; }
+    #resultado .score { font-family: 'Playfair Display', serif; font-size: 3.5rem; color: var(--green); line-height: 1; }
+    #resultado .slabel { font-size: .8rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin: .4rem 0 1rem; }
+    #resultado .smsg  { font-size: .95rem; color: var(--muted); max-width: 420px; margin: 0 auto 1.5rem; line-height: 1.7; }
+
+    footer { border-top: 1px solid var(--border); padding: 1.8rem 2.5rem; display: flex; justify-content: space-between; font-size: .75rem; color: var(--muted); flex-wrap: wrap; gap: .5rem; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="marca">Agrofloresta &amp; Sustentabilidade</span>
+  <span class="tag">Meio Ambiente</span>
+</nav>
+
+<header>
+  <div class="inner">
+    <p class="eyebrow">Sistemas agroflorestais</p>
+    <h1>Produção que restaura,<br>não que destrói.</h1>
+    <p>A agrofloresta une agricultura e floresta em um único sistema produtivo, gerando alimento, renda e biodiversidade — sem sacrificar o equilíbrio ambiental.</p>
+  </div>
+</header>
+
+<main>
+  <p class="label">Fundamentos</p>
+
+  <div class="grid">
+    <div class="card">
+      <p class="num">01 — Conceito</p>
+      <h2>O que é agrofloresta?</h2>
+      <p>Sistema que integra árvores, culturas agrícolas e criação animal no mesmo espaço. Inspirado na estrutura das florestas naturais, produz alimento enquanto regenera o solo.</p>
+    </div>
+    <div class="card">
+      <p class="num">02 — Ambiente</p>
+      <h2>Benefícios ecológicos</h2>
+      <p>Recupera solos degradados, reduz erosão hídrica, protege mananciais e cria corredores de biodiversidade. A cobertura arbórea regula o microclima local de forma significativa.</p>
+    </div>
+    <div class="card">
+      <p class="num">03 — Economia</p>
+      <h2>Viabilidade produtiva</h2>
+      <p>Agricultores diversificam renda com frutas, madeira certificada, ervas e mel, reduzindo dependência de insumos externos e vulnerabilidade a oscilações de mercado.</p>
+    </div>
+    <div class="card">
+      <p class="num">04 — Clima</p>
+      <h2>Sequestro de carbono</h2>
+      <p>SAFs sequestram até três vezes mais carbono do que monoculturas convencionais, tornando-se ferramentas relevantes para as metas climáticas internacionais.</p>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><b>3×</b><span>mais carbono<br>sequestrado</span></div>
+    <div class="sep"></div>
+    <div class="stat"><b>+47%</b><span>biodiversidade<br>em áreas degradadas</span></div>
+    <div class="sep"></div>
+    <div class="stat"><b>180M</b><span>hectares de SAF<br>no mundo</span></div>
+    <div class="sep"></div>
+    <div class="stat"><b>1,2bi</b><span>pessoas dependem<br>de agroflorestas</span></div>
+  </div>
+
+  <p class="label">Avaliação de conhecimento</p>
+
+  <div class="quiz-box">
+    <div class="quiz-top">
+      <h3>Quiz — Agrofloresta e Meio Ambiente</h3>
+      <div class="meta">
+        <span>Questão <b id="qn">—</b> de <b id="qt">—</b></span>
+        <span>Pontuação <b id="qp">—</b></span>
+      </div>
+    </div>
+    <div class="prog"><div class="prog-bar" id="pb" style="width:0%"></div></div>
+
+    <div id="qa">
+      <p style="color:var(--muted);font-size:.9rem;">Clique em <strong>Iniciar</strong> para começar o quiz.</p>
+    </div>
+    <p id="fb"></p>
+
+    <div class="quiz-foot">
+      <button class="ghost" id="breset" onclick="reset()" style="display:none">Reiniciar</button>
+      <div style="display:flex;gap:.7rem;margin-left:auto">
+        <button id="bstart" onclick="start()">Iniciar quiz</button>
+        <button id="bnext"  onclick="next()" disabled style="display:none">Próxima</button>
+      </div>
+    </div>
+
+    <div id="resultado">
+      <div class="score" id="sc"></div>
+      <div class="slabel">pontos obtidos</div>
+      <p class="smsg" id="sm"></p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <span>Sistemas Agroflorestais — Educação Ambiental</span>
+  <span>Conteúdo de caráter informativo e educacional</span>
+</footer>
+
+<script>
+const Q = [
+  { q: "Qual é o principal diferencial dos sistemas agroflorestais em relação às monoculturas?",
+    o: ["Uso intensivo de fertilizantes sintéticos","Integração de árvores com culturas agrícolas, imitando ecossistemas naturais","Eliminação de animais da área produtiva","Dependência exclusiva de irrigação artificial"],
+    c: 1, e: "A agrofloresta reproduz a estrutura das florestas naturais integrando árvores, cultivos e, às vezes, animais no mesmo espaço." },
+  { q: "Sistemas agroflorestais bem manejados podem sequestrar carbono em qual proporção?",
+    o: ["Igual a pastagens convencionais","Metade do capturado por florestas nativas","Até três vezes mais do que monoculturas","Apenas nos dois primeiros anos após o plantio"],
+    c: 2, e: "SAFs podem sequestrar até 3× mais carbono que monoculturas, sendo aliados importantes das metas climáticas globais." },
+  { q: "Qual benefício hídrico direto é proporcionado pela presença de árvores em SAFs?",
+    o: ["Aumento do escoamento superficial","Retenção de umidade e recarga do lençol freático","Redução da umidade relativa do ar","Eliminação da necessidade de cursos d'água próximos"],
+    c: 1, e: "A cobertura arbórea reduz o escoamento, favorece a infiltração e contribui para a recarga dos aquíferos e proteção de nascentes." },
+  { q: "O que torna a agrofloresta economicamente mais resiliente que sistemas convencionais?",
+    o: ["Dependência de um único produto de alto valor","Uso de máquinas pesadas","Diversificação de culturas, distribuindo riscos e renda","Venda exclusiva para mercados internacionais"],
+    c: 2, e: "Frutas, madeira, mel e ervas protegem o produtor de flutuações de mercado e reduzem dependência de insumos externos." },
+  { q: "A sigla SAF, usada em políticas ambientais, refere-se a:",
+    o: ["Solo de Alta Fertilidade","Sistema Agroflorestal","Sequestro Avançado de Florestas","Setor Agropecuário Familiar"],
+    c: 1, e: "SAF é a sigla consolidada para Sistema Agroflorestal, adotada em legislações, pesquisas e programas de fomento." },
+  { q: "Qual afirmação sobre biodiversidade em áreas agroflorestas é correta?",
+    o: ["A presença humana elimina qualquer fauna silvestre","SAFs criam corredores ecológicos e aumentam a riqueza de espécies","Biodiversidade só é preservada em florestas primárias intocadas","Agroflorestas reduzem biodiversidade ao selecionar espécies"],
+    c: 1, e: "SAFs abrigam mais espécies de aves, insetos e plantas do que monoculturas, funcionando como refúgio e corredor ecológico." },
+  { q: "Qual instrumento legal brasileiro estimula diretamente a adoção de SAFs?",
+    o: ["Código de Trânsito Brasileiro","Código Florestal (Lei 12.651/2012) e o Programa ABC+","Lei de Responsabilidade Fiscal","Plano Nacional de Resíduos Sólidos"],
+    c: 1, e: "O Código Florestal permite recuperar APPs com SAFs, e o Programa ABC+ oferece crédito subsidiado para práticas de baixo carbono." },
+  { q: "Em que a agrofloresta se diferencia fundamentalmente da silvicultura convencional?",
+    o: ["A silvicultura é proibida no Brasil","A agrofloresta combina produção agrícola e florestal no mesmo espaço","A silvicultura preserva mais biodiversidade","Não há diferença prática entre os dois sistemas"],
+    c: 1, e: "A silvicultura foca em monocultivos de madeira. A agrofloresta integra cultivos alimentares, medicinais e florestais num sistema diversificado." }
+];
+
+let idx = 0, pts = 0, answered = false;
+
+const qa = document.getElementById('qa'), fb = document.getElementById('fb');
+const qn = document.getElementById('qn'), qt = document.getElementById('qt'), qp = document.getElementById('qp');
+const pb = document.getElementById('pb'), res = document.getElementById('resultado');
+const bstart = document.getElementById('bstart'), bnext = document.getElementById('bnext'), breset = document.getElementById('breset');
+const sc = document.getElementById('sc'), sm = document.getElementById('sm');
+
+function start() {
+  idx = 0; pts = 0; answered = false;
+  qt.textContent = Q.length;
+  bstart.style.display = 'none';
+  bnext.style.display = 'inline-block';
+  res.style.display = 'none';
+  render();
+}
+
+function render() {
+  answered = false;
+  bnext.disabled = true;
+  fb.textContent = ''; fb.className = '';
+  const q = Q[idx];
+  qn.textContent = idx + 1; qp.textContent = pts;
+  pb.style.width = Math.round(idx / Q.length * 100) + '%';
+  qa.innerHTML = `<p class="q-text">${q.q}</p><div class="options">${
+    q.o.map((op, i) => `<button class="opt" onclick="answer(${i})">${op}</button>`).join('')
+  }</div>`;
+}
+
+function answer(i) {
+  if (answered) return;
+  answered = true;
+  const q = Q[idx];
+  const btns = qa.querySelectorAll('.opt');
+  btns.forEach(b => b.disabled = true);
+  if (i === q.c) {
+    btns[i].classList.add('ok'); pts++;
+    fb.textContent = 'Correto. ' + q.e; fb.className = 'ok';
+  } else {
+    btns[i].classList.add('err'); btns[q.c].classList.add('ok');
+    fb.textContent = 'Incorreto. ' + q.e; fb.className = 'err';
+  }
+  qp.textContent = pts;
+  bnext.disabled = false;
+  bnext.textContent = idx + 1 < Q.length ? 'Próxima' : 'Ver resultado';
+}
+
+function next() {
+  idx++;
+  if (idx < Q.length) { render(); return; }
+  qa.innerHTML = ''; fb.textContent = ''; pb.style.width = '100%';
+  bnext.style.display = 'none'; breset.style.display = 'inline-block';
+  qn.textContent = Q.length;
+  const pct = Math.round(pts / Q.length * 100);
+  sc.textContent = pts + '/' + Q.length;
+  sm.textContent = pct >= 80
+    ? 'Excelente desempenho. Você demonstra sólido conhecimento sobre sistemas agroflorestais e sua importância ambiental.'
+    : pct >= 50
+    ? 'Bom desempenho. Há espaço para aprofundar alguns conceitos sobre sustentabilidade e práticas agroecológicas.'
+    : 'Recomenda-se revisar os fundamentos da agrofloresta. Releia os artigos acima e tente novamente.';
+  res.style.display = 'block';
+}
+
+function reset() {
+  breset.style.display = 'none'; bstart.style.display = 'inline-block';
+  res.style.display = 'none'; pb.style.width = '0%';
+  qn.textContent = qt.textContent = qp.textContent = '—';
+  fb.textContent = ''; fb.className = '';
+  qa.innerHTML = '<p style="color:var(--muted);font-size:.9rem;">Clique em <strong>Iniciar</strong> para começar o quiz.</p>';
+}
+</script>
+
+</body>
+</html>
